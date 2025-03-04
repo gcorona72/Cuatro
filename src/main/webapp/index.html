@@ -1,19 +1,21 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
-  <meta charset="utf-8" />
-  <title>Guest Management (Java + Supabase)</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Guest Management con Supabase</title>
 </head>
 <body>
-<h1>Guest Management</h1>
+<h1>Gestión de Invitados</h1>
 
-<button onclick="loadGuests()">Load Guests</button>
+<!-- Botón para cargar invitados -->
+<button onclick="loadGuests()">Cargar Invitados</button>
 <ul id="guestList"></ul>
 
 <hr/>
-<h2>Add Guest</h2>
+<h2>Agregar Invitado</h2>
 <form id="addForm">
-  <label>Name:</label>
+  <label>Nombre:</label>
   <input type="text" id="name" required>
   <br/>
 
@@ -21,7 +23,7 @@
   <input type="email" id="email" required>
   <br/>
 
-  <label>Phone:</label>
+  <label>Teléfono:</label>
   <input type="text" id="phone">
   <br/>
 
@@ -33,21 +35,21 @@
   <input type="checkbox" id="plus_one">
   <br/>
 
-  <label>Notes:</label>
+  <label>Notas:</label>
   <input type="text" id="notes">
   <br/>
 
-  <button type="submit">Add Guest</button>
+  <button type="submit">Agregar Invitado</button>
 </form>
 
 <hr/>
-<h2>Update Guest</h2>
+<h2>Actualizar Invitado</h2>
 <form id="updateForm">
   <label>ID:</label>
   <input type="number" id="updateId" required>
   <br/>
 
-  <label>Name:</label>
+  <label>Nombre:</label>
   <input type="text" id="updateName">
   <br/>
 
@@ -55,7 +57,7 @@
   <input type="email" id="updateEmail">
   <br/>
 
-  <label>Phone:</label>
+  <label>Teléfono:</label>
   <input type="text" id="updatePhone">
   <br/>
 
@@ -67,107 +69,114 @@
   <input type="checkbox" id="updatePlusOne">
   <br/>
 
-  <label>Notes:</label>
+  <label>Notas:</label>
   <input type="text" id="updateNotes">
   <br/>
 
-  <button type="submit">Update Guest</button>
+  <button type="submit">Actualizar Invitado</button>
 </form>
 
 <hr/>
-<h2>Delete Guest</h2>
+<h2>Eliminar Invitado</h2>
 <form id="deleteForm">
   <label>ID:</label>
   <input type="number" id="deleteId" required>
-  <button type="submit">Delete</button>
+  <button type="submit">Eliminar</button>
 </form>
 
-<script>
-  // 1) LISTAR INVITADOS
+<!-- Importa el Supabase JS SDK directamente desde un CDN -->
+<script type="module">
+  import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+
+  // Credenciales de tu proyecto en Supabase
+  const supabaseUrl = 'https://ndapktzfypmgnlqhtxcy.supabase.co';
+  const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5kYXBrdHpmeXBtZ25scWh0eGN5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDEwOTczNjYsImV4cCI6MjA1NjY3MzM2Nn0.8fJgmOpKZiWQdDVx7Y-e6NvKPw8vVpUiLT1w4qb0HE8';
+  const supabase = createClient(supabaseUrl, supabaseKey);
+
+  // Cargar invitados
   async function loadGuests() {
-    const res = await fetch("SupabaseServlet");
-    // GET a /SupabaseServlet -> listGuests
-    if (!res.ok) {
-      alert("Error loading guests.");
+    const { data, error } = await supabase
+            .from('guests')
+            .select('*');
+    if (error) {
+      console.error('Error al cargar invitados:', error);
       return;
     }
-    const data = await res.json();
-    const list = document.getElementById("guestList");
-    list.innerHTML = "";
-    data.forEach(g => {
-      const li = document.createElement("li");
-      li.textContent = `[${g.id}] ${g.name} - ${g.email} - RSVP: ${g.rsvp_status}`;
+    const list = document.getElementById('guestList');
+    list.innerHTML = '';
+    data.forEach(guest => {
+      const li = document.createElement('li');
+      li.textContent = `[${guest.id}] ${guest.name} - ${guest.email} - RSVP: ${guest.rsvp_status}`;
       list.appendChild(li);
     });
   }
 
-  // 2) AGREGAR INVITADO
-  document.getElementById("addForm").addEventListener("submit", async (e) => {
+  // Agregar invitado
+  document.getElementById('addForm').addEventListener('submit', async (e) => {
     e.preventDefault();
-    const body = {
-      name: document.getElementById("name").value,
-      email: document.getElementById("email").value,
-      phone: document.getElementById("phone").value,
-      rsvp_status: document.getElementById("rsvp").value,
-      plus_one: document.getElementById("plus_one").checked,
-      notes: document.getElementById("notes").value
+    const newGuest = {
+      name: document.getElementById('name').value,
+      email: document.getElementById('email').value,
+      phone: document.getElementById('phone').value,
+      rsvp_status: document.getElementById('rsvp').value,
+      plus_one: document.getElementById('plus_one').checked,
+      notes: document.getElementById('notes').value
     };
-    const res = await fetch("SupabaseServlet?action=add", {
-      method: "POST",
-      headers: {"Content-Type": "application/json"},
-      body: JSON.stringify(body)
-    });
-    if (res.ok) {
-      alert("Guest added!");
-      loadGuests();
+    const { error } = await supabase
+            .from('guests')
+            .insert(newGuest);
+    if (error) {
+      console.error('Error al agregar invitado:', error);
+      alert('Error al agregar invitado.');
     } else {
-      alert("Error adding guest.");
+      alert('Invitado agregado correctamente.');
+      loadGuests();
     }
   });
 
-  // 3) ACTUALIZAR INVITADO
-  document.getElementById("updateForm").addEventListener("submit", async (e) => {
+  // Actualizar invitado
+  document.getElementById('updateForm').addEventListener('submit', async (e) => {
     e.preventDefault();
-    const body = {
-      id: Number(document.getElementById("updateId").value),
-      name: document.getElementById("updateName").value,
-      email: document.getElementById("updateEmail").value,
-      phone: document.getElementById("updatePhone").value,
-      rsvp_status: document.getElementById("updateRsvp").value,
-      plus_one: document.getElementById("updatePlusOne").checked,
-      notes: document.getElementById("updateNotes").value
+    const id = Number(document.getElementById('updateId').value);
+    const updatedGuest = {
+      name: document.getElementById('updateName').value,
+      email: document.getElementById('updateEmail').value,
+      phone: document.getElementById('updatePhone').value,
+      rsvp_status: document.getElementById('updateRsvp').value,
+      plus_one: document.getElementById('updatePlusOne').checked,
+      notes: document.getElementById('updateNotes').value
     };
-    const res = await fetch("SupabaseServlet?action=update", {
-      method: "POST",
-      headers: {"Content-Type": "application/json"},
-      body: JSON.stringify(body)
-    });
-    if (res.ok) {
-      alert("Guest updated!");
-      loadGuests();
+    const { error } = await supabase
+            .from('guests')
+            .update(updatedGuest)
+            .eq('id', id);
+    if (error) {
+      console.error('Error al actualizar invitado:', error);
+      alert('Error al actualizar invitado.');
     } else {
-      alert("Error updating guest.");
+      alert('Invitado actualizado correctamente.');
+      loadGuests();
     }
   });
 
-  // 4) ELIMINAR INVITADO
-  document.getElementById("deleteForm").addEventListener("submit", async (e) => {
+  // Eliminar invitado
+  document.getElementById('deleteForm').addEventListener('submit', async (e) => {
     e.preventDefault();
-    const id = Number(document.getElementById("deleteId").value);
-    const res = await fetch("SupabaseServlet?action=delete", {
-      method: "POST",
-      headers: {"Content-Type": "application/json"},
-      body: JSON.stringify({id})
-    });
-    if (res.ok) {
-      alert("Guest deleted!");
-      loadGuests();
+    const id = Number(document.getElementById('deleteId').value);
+    const { error } = await supabase
+            .from('guests')
+            .delete()
+            .eq('id', id);
+    if (error) {
+      console.error('Error al eliminar invitado:', error);
+      alert('Error al eliminar invitado.');
     } else {
-      alert("Error deleting guest.");
+      alert('Invitado eliminado correctamente.');
+      loadGuests();
     }
   });
 
-  // Carga inicial de la lista
+  // Carga inicial de invitados
   loadGuests();
 </script>
 </body>
