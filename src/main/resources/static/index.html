@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gestión de Invitados</title>
+  <style>
+    /* Estilos mejorados */
+    body { font-family: Arial, sans-serif; max-width: 800px; margin: 20px auto; padding: 0 20px; }
+    .section { background: #f5f5f5; padding: 20px; margin: 20px 0; border-radius: 8px; }
+    input[type="text"], input[type="email"], input[type="number"] { width: 100%; padding: 8px; margin: 5px 0; }
+    button { background: #007bff; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; }
+    .error { color: #dc3545; margin-top: 10px; }
+  </style>
+</head>
+<body>
+<div class="section">
+  <h1>Lista de Invitados</h1>
+  <button onclick="loadGuests()">Actualizar Lista</button>
+  <div id="guestList"></div>
+</div>
+
+<div class="section">
+  <h2>Agregar Nuevo Invitado</h2>
+  <form id="addForm">
+    <input type="text" id="name" placeholder="Nombre" required>
+    <input type="email" id="email" placeholder="Email" required>
+    <input type="text" id="phone" placeholder="Teléfono">
+    <label>
+      <input type="checkbox" id="plus_one"> Acompañante
+    </label>
+    <textarea id="notes" placeholder="Notas"></textarea>
+    <button type="submit">Agregar</button>
+  </form>
+</div>
+
+<div class="section">
+  <h2>Modificar Invitado</h2>
+  <form id="updateForm">
+    <input type="number" id="updateId" placeholder="ID del invitado" required>
+    <input type="text" id="updateName" placeholder="Nuevo nombre">
+    <input type="email" id="updateEmail" placeholder="Nuevo email">
+    <button type="submit">Actualizar</button>
+  </form>
+</div>
+
+<div class="section">
+  <h2>Eliminar Invitado</h2>
+  <form id="deleteForm">
+    <input type="number" id="deleteId" placeholder="ID a eliminar" required>
+    <button type="submit">Eliminar</button>
+  </form>
+</div>
+
+<div id="message"></div>
+
+<script type="module">
+  import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+
+  const SUPABASE_URL = 'https://ndapktzfypmgnlqhtxcy.supabase.co'
+  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5kYXBrdHpmeXBtZ25scWh0eGN5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDEwOTczNjYsImV4cCI6MjA1NjY3MzM2Nn0.8fJgmOpKZiWQdDVx7Y-e6NvKPw8vVpUiLT1w4qb0HE8'
+
+  const supabase = createClient(SUPABASE_URL, SUPABASE_KEY)
+
+  // ========== [1. CONFIGURACIÓN INICIAL] ==========
+  // Verificar conexión a Supabase
+  supabase
+          .from('guests')
+          .select('*')
+          .then(response => {
+            if(response.error) throw new Error('Error de conexión a Supabase')
+          })
+
+  // ========== [2. FUNCIONALIDAD BÁSICA] ==========
+  async function loadGuests() {
+    try {
+      const { data, error } = await supabase
+              .from('guests')
+              .select('*')
+              .order('id', { ascending: true })
+
+      if(error) throw error
+
+      const html = data.map(guest => `
+        <div class="guest-item">
+          <strong>#${guest.id}</strong> ${guest.name}
+          <div>Email: ${guest.email}</div>
+          ${guest.plus_one ? '<div>Acompañante: Sí</div>' : ''}
+          ${guest.notes ? `<div>Notas: ${guest.notes}</div>` : ''}
+        </div>
+      `).join('')
+
+      document.getElementById('guestList').innerHTML = html
+    } catch (error) {
+      showMessage(`Error: ${error.message}`)
+    }
+  }
+
+  // ========== [3. MANEJO DE FORMULARIOS] ==========
+  document.getElementById('addForm').addEventListener('submit', async (e) => {
+    e.preventDefault()
+    try {
+      const { error } = await supabase
+              .from('guests')
+              .insert([{
+                name: document.getElementById('name').value,
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value,
+                plus_one: document.getElementById('plus_one').checked,
+                notes: document.getElementById('notes').value
+              }])
+              .select('*')  // ← Importante para recibir feedback
+
+      if(error) throw error
+
+      showMessage('Invitado agregado exitosamente')
+      e.target.reset()
+      loadGuests()
+    } catch (error) {
+      showMessage(`Error: ${error.message}`)
+    }
+  })
+
+  // ========== [4. POLÍTICAS RLS (SOLUCIÓN DEFINITIVA)] ==========
+  /*
+    Ejecutar estas políticas en SQL Editor de Supabase:
+
+    1. Habilitar RLS:
+    ALTER TABLE guests ENABLE ROW LEVEL SECURITY;
+
+    2. Crear políticas:
+    CREATE POLICY "Total acceso público" ON guests
+    FOR ALL USING (true) WITH CHECK (true);
+  */
+
+  // ========== [5. FUNCIONALIDAD ADICIONAL] ==========
+  function showMessage(text, type = 'error') {
+    const messageDiv = document.getElementById('message')
+    messageDiv.textContent = text
+    messageDiv.className = type
+    setTimeout(() => messageDiv.textContent = '', 3000)
+  }
+
+  // Carga inicial
+  loadGuests()
+</script>
+</body>
+</html>
