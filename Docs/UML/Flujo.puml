@@ -1,0 +1,40 @@
+@startuml
+start
+
+:Usuario accede a la aplicación;
+
+fork
+    :Muestra lista de invitados (consulta.jsp);
+fork again
+    :Formulario para agregar invitado (alta.jsp);
+fork again
+    :Botón para eliminar invitado;
+fork again
+    :Botón para actualizar datos de invitado;
+end fork
+
+if (Usuario selecciona una opción?) then (Ver lista)
+    :ConsultarInvitadosServlet obtiene la lista;
+    :Muestra la lista en consulta.jsp;
+else if (Agregar invitado)
+    :Usuario llena el formulario;
+    :Envía datos a AgregarInvitadoServlet;
+    :Servicio agrega el invitado en la base de datos;
+    :Redirige a consulta.jsp con la lista actualizada;
+else if (Eliminar invitado)
+    :Usuario hace clic en eliminar;
+    :Envía solicitud a EliminarInvitadoServlet;
+    :Servicio elimina el invitado de la base de datos;
+    :Redirige a consulta.jsp con la lista actualizada;
+else if (Actualizar invitado)
+    :Usuario selecciona un invitado a modificar;
+    :Formulario de actualización se muestra;
+    :Usuario edita los datos y envía la solicitud;
+    :ActualizarInvitadoServlet procesa los cambios;
+    :Servicio actualiza el invitado en la base de datos;
+    :Redirige a consulta.jsp con la lista actualizada;
+endif
+
+:Usuario puede repetir acciones o salir;
+stop
+@enduml
