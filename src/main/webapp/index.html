@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Guest Management (Java + Supabase)</title>
+</head>
+<body>
+<h1>Guest Management</h1>
+
+<button onclick="loadGuests()">Load Guests</button>
+<ul id="guestList"></ul>
+
+<hr/>
+<h2>Add Guest</h2>
+<form id="addForm">
+  <label>Name:</label>
+  <input type="text" id="name" required>
+  <br/>
+
+  <label>Email:</label>
+  <input type="email" id="email" required>
+  <br/>
+
+  <label>Phone:</label>
+  <input type="text" id="phone">
+  <br/>
+
+  <label>RSVP:</label>
+  <input type="text" id="rsvp">
+  <br/>
+
+  <label>Plus One:</label>
+  <input type="checkbox" id="plus_one">
+  <br/>
+
+  <label>Notes:</label>
+  <input type="text" id="notes">
+  <br/>
+
+  <button type="submit">Add Guest</button>
+</form>
+
+<hr/>
+<h2>Update Guest</h2>
+<form id="updateForm">
+  <label>ID:</label>
+  <input type="number" id="updateId" required>
+  <br/>
+
+  <label>Name:</label>
+  <input type="text" id="updateName">
+  <br/>
+
+  <label>Email:</label>
+  <input type="email" id="updateEmail">
+  <br/>
+
+  <label>Phone:</label>
+  <input type="text" id="updatePhone">
+  <br/>
+
+  <label>RSVP:</label>
+  <input type="text" id="updateRsvp">
+  <br/>
+
+  <label>Plus One:</label>
+  <input type="checkbox" id="updatePlusOne">
+  <br/>
+
+  <label>Notes:</label>
+  <input type="text" id="updateNotes">
+  <br/>
+
+  <button type="submit">Update Guest</button>
+</form>
+
+<hr/>
+<h2>Delete Guest</h2>
+<form id="deleteForm">
+  <label>ID:</label>
+  <input type="number" id="deleteId" required>
+  <button type="submit">Delete</button>
+</form>
+
+<script>
+  // 1) LISTAR INVITADOS
+  async function loadGuests() {
+    const res = await fetch("SupabaseServlet");
+    // GET a /SupabaseServlet -> listGuests
+    if (!res.ok) {
+      alert("Error loading guests.");
+      return;
+    }
+    const data = await res.json();
+    const list = document.getElementById("guestList");
+    list.innerHTML = "";
+    data.forEach(g => {
+      const li = document.createElement("li");
+      li.textContent = `[${g.id}] ${g.name} - ${g.email} - RSVP: ${g.rsvp_status}`;
+      list.appendChild(li);
+    });
+  }
+
+  // 2) AGREGAR INVITADO
+  document.getElementById("addForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const body = {
+      name: document.getElementById("name").value,
+      email: document.getElementById("email").value,
+      phone: document.getElementById("phone").value,
+      rsvp_status: document.getElementById("rsvp").value,
+      plus_one: document.getElementById("plus_one").checked,
+      notes: document.getElementById("notes").value
+    };
+    const res = await fetch("SupabaseServlet?action=add", {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify(body)
+    });
+    if (res.ok) {
+      alert("Guest added!");
+      loadGuests();
+    } else {
+      alert("Error adding guest.");
+    }
+  });
+
+  // 3) ACTUALIZAR INVITADO
+  document.getElementById("updateForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const body = {
+      id: Number(document.getElementById("updateId").value),
+      name: document.getElementById("updateName").value,
+      email: document.getElementById("updateEmail").value,
+      phone: document.getElementById("updatePhone").value,
+      rsvp_status: document.getElementById("updateRsvp").value,
+      plus_one: document.getElementById("updatePlusOne").checked,
+      notes: document.getElementById("updateNotes").value
+    };
+    const res = await fetch("SupabaseServlet?action=update", {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify(body)
+    });
+    if (res.ok) {
+      alert("Guest updated!");
+      loadGuests();
+    } else {
+      alert("Error updating guest.");
+    }
+  });
+
+  // 4) ELIMINAR INVITADO
+  document.getElementById("deleteForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const id = Number(document.getElementById("deleteId").value);
+    const res = await fetch("SupabaseServlet?action=delete", {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({id})
+    });
+    if (res.ok) {
+      alert("Guest deleted!");
+      loadGuests();
+    } else {
+      alert("Error deleting guest.");
+    }
+  });
+
+  // Carga inicial de la lista
+  loadGuests();
+</script>
+</body>
+</html>

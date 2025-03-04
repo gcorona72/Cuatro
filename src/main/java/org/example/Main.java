@@ -1,17 +1,33 @@
 package org.example;
 
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
-public class Main {
-    public static void main(String[] args) {
-        //TIP Press <shortcut actionId="ShowIntentionActions"/> with your caret at the highlighted text
-        // to see how IntelliJ IDEA suggests fixing it.
-        System.out.printf("Hello and welcome!");
+import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.servlet.ServletContextHandler;
+import org.eclipse.jetty.servlet.ServletHolder;
 
-        for (int i = 1; i <= 5; i++) {
-            //TIP Press <shortcut actionId="Debug"/> to start debugging your code. We have set one <icon src="AllIcons.Debugger.Db_set_breakpoint"/> breakpoint
-            // for you, but you can always add more by pressing <shortcut actionId="ToggleLineBreakpoint"/>.
-            System.out.println("i = " + i);
-        }
+// Asegúrate de que SupabaseServlet use jakarta.servlet.*
+public class Main {
+    public static void main(String[] args) throws Exception {
+        // Crea servidor Jetty en el puerto 8080
+        Server server = new Server(8081);
+
+
+        // Configura el contexto
+        ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
+        context.setContextPath("/");
+        server.setHandler(context);
+
+        // Mapea el servlet en "/SupabaseServlet"
+        // NOTA: SupabaseServlet debe extender jakarta.servlet.http.HttpServlet
+        ServletHolder servletHolder = new ServletHolder(new SupabaseServlet());
+        context.addServlet(servletHolder, "/SupabaseServlet");
+
+        // (Opcional) Servir archivos estáticos (index.html) desde /src/main/resources/web/
+        // context.setResourceBase("src/main/resources/web");
+        // context.addServlet(DefaultServlet.class, "/");
+
+        // Inicia Jetty
+        server.start();
+        System.out.println("Servidor Jetty corriendo en http://localhost:8080");
+        server.join();
     }
 }
