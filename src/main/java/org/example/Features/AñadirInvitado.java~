@@ -8,16 +8,17 @@ import java.sql.SQLException;
 
 public class AñadirInvitado {
 
-    public static void agregarInvitado(String nombre) {
+    public static void agregarInvitado(String nombre , String apellido) {
 
-        String sql = "INSERT INTO invitados (nombre VALUES (?))";
+        String sql = "INSERT INTO invitados (nombre , apellido) VALUES (? , ?)";
 
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setString(1, nombre);
+            pstmt.setString(2, apellido);
             pstmt.executeUpdate();
-            System.out.println("✅ Invitado '" + nombre + "' agregado.");
+            System.out.println("✅ Invitado '" + nombre + " " + apellido + "' agregado.");
         } catch (SQLException e) {
             e.printStackTrace();
             System.out.println("❌ Error al agregar el invitado.");

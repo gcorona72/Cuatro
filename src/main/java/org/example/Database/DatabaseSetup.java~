@@ -1,4 +1,4 @@
-package org.example;
+package org.example.Database;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -36,7 +36,7 @@ public class DatabaseSetup {
 
             String sql = "CREATE TABLE IF NOT EXISTS invitados ("
                     + "id INT AUTO_INCREMENT PRIMARY KEY, "
-                    + "nombre VARCHAR(100) NOT NULL"
+                    + "nombre VARCHAR(100) NOT NULL,"
                     + ")";
             stmt.executeUpdate(sql);
             System.out.println("✅ Tabla 'invitados' creada o ya existente.");
