@@ -1,5 +1,6 @@
 package org.example;
 
+import org.example.Features.ActualizarInvitado;
 import org.example.Features.AñadirInvitado;
 import org.example.Features.BuscarInvitado;
 import org.example.Features.EliminarInvitado;
@@ -19,7 +20,8 @@ public class Main {
             System.out.println("1\uFE0F⃣  Agregar invitado");
             System.out.println("2️⃣ Eliminar Invitado");
             System.out.println("3️⃣ Buscar invitado");
-            System.out.println("4\uFE0F⃣  Salir");
+            System.out.println("4️⃣ Actualizar invitado");
+            System.out.println("5\uFE0F⃣  Salir");
             System.out.print("Elige una opción: ");
 
 
@@ -45,12 +47,20 @@ public class Main {
                     BuscarInvitado.buscarInvitado(idBuscar);
                     break;
                 case 4:
+                    System.out.print("Ingrese el ID del invitado a actualizar: ");
+                    int idActualizar = scanner.nextInt();
+                    scanner.nextLine();
+                    System.out.print("Ingrese el nuevo nombre: ");
+                    String nuevoNombre = scanner.nextLine();
+                    ActualizarInvitado.actualizarInvitado(idActualizar, nuevoNombre);
+                    break;
+                case 5:
                     System.out.println("👋 Saliendo del programa...");
                     break;
                 default:
                     System.out.println("⚠️ Opción no válida. Inténtelo de nuevo.");
             }
-        } while (opcion != 4);
+        } while (opcion != 5);
 
         scanner.close();
 
