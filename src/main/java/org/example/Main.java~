@@ -26,7 +26,9 @@ public class Main {
                 case 1:
                     System.out.print("Ingrese el nombre del invitado: ");
                     String nombre = scanner.next();
-                    AñadirInvitado.agregarInvitado(nombre);
+                    System.out.print("Ingrese el apellido del invitado: ");
+                    String apellido = scanner.next();
+                    AñadirInvitado.agregarInvitado(nombre , apellido);
                     break;
                 case 2:
                     System.out.println("👋 Saliendo del programa...");
