@@ -1,9 +1,6 @@
 package org.example;
 
-import org.example.Features.ActualizarInvitado;
-import org.example.Features.AñadirInvitado;
-import org.example.Features.BuscarInvitado;
-import org.example.Features.EliminarInvitado;
+import org.example.Features.*;
 
 import java.util.Scanner;
 
@@ -21,7 +18,8 @@ public class Main {
             System.out.println("2️⃣ Eliminar Invitado");
             System.out.println("3️⃣ Buscar invitado");
             System.out.println("4️⃣ Actualizar invitado");
-            System.out.println("5\uFE0F⃣  Salir");
+            System.out.println("5️⃣ Listar invitados");
+            System.out.println("6\uFE0F⃣  Salir");
             System.out.print("Elige una opción: ");
 
 
@@ -55,12 +53,15 @@ public class Main {
                     ActualizarInvitado.actualizarInvitado(idActualizar, nuevoNombre);
                     break;
                 case 5:
+                    ListarInvitados.listarInvitados();
+                    break;
+                case 6:
                     System.out.println("👋 Saliendo del programa...");
                     break;
                 default:
                     System.out.println("⚠️ Opción no válida. Inténtelo de nuevo.");
             }
-        } while (opcion != 5);
+        } while (opcion != 6);
 
         scanner.close();
 
