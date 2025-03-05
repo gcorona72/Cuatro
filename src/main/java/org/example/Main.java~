@@ -1,6 +1,7 @@
 package org.example;
 
 import org.example.Features.AñadirInvitado;
+import org.example.Features.BuscarInvitado;
 import org.example.Features.EliminarInvitado;
 
 import java.util.Scanner;
@@ -33,16 +34,22 @@ public class Main {
                 case 2:
                     System.out.print("Ingrese el ID del invitado a eliminar: ");
                     int id = scanner.nextInt();
-                    scanner.nextLine(); 
+                    scanner.nextLine();
                     EliminarInvitado.eliminarInvitado(id);
                     break;
                 case 3:
+                    System.out.print("Ingrese el ID del invitado a buscar: ");
+                    int idBuscar = scanner.nextInt();
+                    scanner.nextLine();
+                    BuscarInvitado.buscarInvitado(idBuscar);
+                    break;
+                case 4:
                     System.out.println("👋 Saliendo del programa...");
                     break;
                 default:
                     System.out.println("⚠️ Opción no válida. Inténtelo de nuevo.");
             }
-        } while (opcion != 2);
+        } while (opcion != 4);
 
         scanner.close();
 
