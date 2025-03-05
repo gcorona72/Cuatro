@@ -1,7 +1,5 @@
 package org.example;
 
-import org.example.Features.AñadirInvitado;
-
 import java.util.Scanner;
 
 public class Main {
@@ -26,7 +24,7 @@ public class Main {
                 case 1:
                     System.out.print("Ingrese el nombre del invitado: ");
                     String nombre = scanner.next();
-                    AñadirInvitado.agregarInvitado(nombre);
+                    AddInvitado.agregarInvitado(nombre);
                     break;
                 case 2:
                     System.out.println("👋 Saliendo del programa...");
@@ -39,5 +37,11 @@ public class Main {
         scanner.close();
 
         }
-    }
 
+
+
+
+
+
+    }
+}
