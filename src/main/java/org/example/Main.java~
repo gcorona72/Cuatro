@@ -18,7 +18,9 @@ public class Main {
             System.out.println("\n \uD83D\uDCCB Menú - Gestión de invitados");
             System.out.println("1\uFE0F⃣  Agregar invitado");
             System.out.println("2️⃣ Eliminar Invitado");
-            System.out.println("3\uFE0F⃣  Salir");
+            System.out.println("3️⃣ Buscar invitado");
+            System.out.println("4️⃣ Actualizar invitado");
+            System.out.println("5\uFE0F⃣  Salir");
             System.out.print("Elige una opción: ");
 
 
