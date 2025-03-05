@@ -1,0 +1,82 @@
+package org.example.Features;
+
+import org.example.Database.DatabaseConnection;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+public class BuscarInvitadoTest {
+
+    private Connection connection;
+    private int testInvitadoId;
+
+    @BeforeEach
+    public void setUp() throws SQLException {
+        connection = DatabaseConnection.getConnection();
+        assertNotNull(connection, "La conexión a la base de datos no debe ser nula.");
+
+        // Insertar un invitado de prueba en la base de datos antes de cada test
+        try (PreparedStatement pstmt = connection.prepareStatement(
+                "INSERT INTO invitados (nombre) VALUES (?)", PreparedStatement.RETURN_GENERATED_KEYS)) {
+            pstmt.setString(1, "TestNombre");
+            pstmt.executeUpdate();
+
+            // Obtener el ID generado para el invitado de prueba
+            try (ResultSet rs = pstmt.getGeneratedKeys()) {
+                if (rs.next()) {
+                    testInvitadoId = rs.getInt(1);
+                }
+            }
+        }
+
+        assertTrue(testInvitadoId > 0, "El ID del invitado de prueba debe ser válido.");
+    }
+
+    @AfterEach
+    public void tearDown() throws SQLException {
+        // Eliminar el invitado de prueba después de cada test
+        try (PreparedStatement pstmt = connection.prepareStatement("DELETE FROM invitados WHERE id = ?")) {
+            pstmt.setInt(1, testInvitadoId);
+            pstmt.executeUpdate();
+        }
+        connection.close();
+    }
+
+    @Test
+    public void testBuscarInvitadoExistente() throws SQLException {
+        // Capturar la salida del método BuscarInvitado
+        BuscarInvitado.buscarInvitado(testInvitadoId);
+
+        // Verificar que el invitado existe en la base de datos
+        try (PreparedStatement pstmt = connection.prepareStatement("SELECT * FROM invitados WHERE id = ?")) {
+            pstmt.setInt(1, testInvitadoId);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                assertTrue(rs.next(), "El invitado debería existir en la base de datos.");
+                assertEquals("TestNombre", rs.getString("nombre"), "El nombre del invitado no coincide.");
+            }
+        }
+    }
+
+    @Test
+    public void testBuscarInvitadoNoExistente() throws SQLException {
+        int idInvalido = 99999;
+
+        // Ejecutar el método con un ID que no existe
+        BuscarInvitado.buscarInvitado(idInvalido);
+
+        // Verificar que el invitado NO está en la base de datos
+        try (PreparedStatement pstmt = connection.prepareStatement("SELECT * FROM invitados WHERE id = ?")) {
+            pstmt.setInt(1, idInvalido);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                assertFalse(rs.next(), "No debería existir un invitado con este ID.");
+            }
+        }
+    }
+}
