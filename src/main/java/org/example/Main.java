@@ -3,14 +3,17 @@ package org.example;
 import org.example.Database.SupabaseConnection;
 import org.example.Features.GuestService;
 import org.example.Model.Guest;
+import org.example.SparkServer; // Importamos la clase del servidor
 
 import java.sql.Connection;
 import java.util.List;
 import java.util.Scanner;
 
 public class Main {
-
     public static void main(String[] args) {
+        // Inicia el servidor Spark en un hilo separado
+        new Thread(() -> SparkServer.start()).start();
+
         // Probamos la conexión antes de ejecutar el programa
         Connection conn = SupabaseConnection.getConnection();
         if (conn != null) {
