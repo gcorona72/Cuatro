@@ -1,0 +1,21 @@
+@startuml
+
+actor Usuario
+actor Administrador
+
+usecase "Consultar lista de invitados" as UC1
+usecase "Agregar invitado" as UC2
+usecase "Eliminar invitado" as UC3
+usecase "Actualizar invitado" as UC4
+
+Usuario --> UC1
+Usuario --> UC2
+Usuario --> UC3
+Usuario --> UC4
+
+Administrador --> UC1
+Administrador --> UC2
+Administrador --> UC3
+Administrador --> UC4
+
+@enduml

@@ -1,17 +1,30 @@
 package org.example;
 
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
+import org.example.Database.SupabaseConnection;
+import java.awt.Desktop;
+import java.net.URI;
+import java.sql.Connection;
+
 public class Main {
     public static void main(String[] args) {
-        //TIP Press <shortcut actionId="ShowIntentionActions"/> with your caret at the highlighted text
-        // to see how IntelliJ IDEA suggests fixing it.
-        System.out.printf("Hello and welcome!");
+        // Inicia tu SparkServer (asegúrate de que sirva la carpeta /public)
+        SparkServer.start();
 
-        for (int i = 1; i <= 5; i++) {
-            //TIP Press <shortcut actionId="Debug"/> to start debugging your code. We have set one <icon src="AllIcons.Debugger.Db_set_breakpoint"/> breakpoint
-            // for you, but you can always add more by pressing <shortcut actionId="ToggleLineBreakpoint"/>.
-            System.out.println("i = " + i);
+        // Verifica la conexión a Supabase
+        Connection conn = SupabaseConnection.getConnection();
+        if (conn != null) {
+            System.out.println("✅ Conexión exitosa a Supabase!");
+        } else {
+            System.out.println("❌ Error al conectar con la base de datos.");
+        }
+
+        // Fuerza la apertura del navegador
+        try {
+            if (Desktop.isDesktopSupported()) {
+                Desktop.getDesktop().browse(new URI("http://localhost:4567"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

@@ -1,0 +1,46 @@
+@startuml
+
+class Invitado {
+    - int id
+    - String nombre
+    + getId(): int
+    + setId(int): void
+    + getNombre(): String
+    + setNombre(String): void
+}
+
+class InvitadoDAO {
+    + getInvitados(): List<Invitado>
+    + agregarInvitado(Invitado): void
+    + eliminarInvitado(int): void
+    + actualizarInvitado(Invitado): void
+}
+
+class InvitadoService {
+    - InvitadoDAO dao
+    + obtenerInvitados(): List<Invitado>
+    + agregarInvitado(Invitado): void
+    + eliminarInvitado(int): void
+    + actualizarInvitado(Invitado): void
+}
+
+class InvitadoController {
+    - InvitadoService service
+    + mostrarInvitados(): void
+    + registrarInvitado(): void
+    + eliminarInvitado(): void
+    + actualizarInvitado(): void
+}
+
+class JSP_Pages {
+    + invitados.jsp
+    + agregar.jsp
+    + eliminar.jsp
+    + actualizar.jsp
+}
+
+InvitadoService --> InvitadoDAO : usa
+InvitadoController --> InvitadoService : usa
+JSP_Pages --> InvitadoController : interactúa
+
+@enduml
