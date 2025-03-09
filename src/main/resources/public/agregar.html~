@@ -4,17 +4,95 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Añadir Invitado</title>
+    <link href="https://fonts.googleapis.com/css?family=Montserrat&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body { font-family: 'Montserrat', sans-serif; text-align: center; }
-        .container { margin: 20px auto; max-width: 400px; }
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(to right, #4facfe, #00f2fe);
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            width: 400px;
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1 {
+            color: #333;
+            font-size: 24px;
+        }
+
+        .input-group {
+            margin: 10px 0;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+        }
+
+        button {
+            background: linear-gradient(to right, #28a745, #218838);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: bold;
+            box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.2);
+            transition: transform 0.2s, box-shadow 0.2s;
+            width: 100%;
+        }
+
+        button:hover {
+            transform: scale(1.05);
+            box-shadow: 4px 6px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .back {
+            display: block;
+            margin-top: 20px;
+            text-decoration: none;
+            color: #007BFF;
+            font-size: 16px;
+        }
     </style>
 </head>
 <body>
 <div class="container">
     <h1>Añadir Invitado</h1>
-    <input type="text" id="nombre" placeholder="Nombre">
-    <input type="checkbox" id="acompanante"> Acompañante
-    <button onclick="agregar()">Añadir</button>
+    <div class="input-group">
+        <input type="text" id="nombre" placeholder="Nombre">
+    </div>
+    <div class="input-group">
+        <label><input type="checkbox" id="acompanante"> Acompañante</label>
+    </div>
+    <button onclick="agregar()"><i class="fas fa-user-plus"></i> Añadir</button>
     <a href="index.html" class="back">Volver</a>
 </div>
 <script>
