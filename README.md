@@ -62,6 +62,7 @@ El archivo `railway.json` define cómo se debe construir y desplegar la aplicaci
     "restartPolicyMaxRetries": 10
   }
 }
+```
 Pasos para desplegar en Railway
 Conectar el repositorio a Railway:
 
