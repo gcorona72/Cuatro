@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Actualizar Invitado</title>
+</head>
+<body>
+<h1>Actualizar Invitado</h1>
+<input type="number" id="idUpdate" placeholder="ID">
+<input type="text" id="nombreUpdate" placeholder="Nuevo Nombre">
+<input type="checkbox" id="acompananteUpdate"> Acompañante
+<button onclick="actualizar()">Actualizar</button>
+<a href="index.html">Volver</a>
+<script>
+    function actualizar() {
+        fetch(`/api/guests/${document.getElementById('idUpdate').value}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ nombre: document.getElementById('nombreUpdate').value, acompanante: document.getElementById('acompananteUpdate').checked })
+        }).then(() => alert('Invitado actualizado!')).then(() => window.location.href = 'index.html');
+    }
+</script>
+</body>
+</html>

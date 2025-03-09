@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eliminar Invitado</title>
+</head>
+<body>
+<h1>Eliminar Invitado</h1>
+<input type="number" id="idDelete" placeholder="ID">
+<button onclick="eliminar()">Eliminar</button>
+<a href="index.html">Volver</a>
+<script>
+    function eliminar() {
+        fetch(`/api/guests/${document.getElementById('idDelete').value}`, { method: 'DELETE' })
+            .then(() => alert('Invitado eliminado!'))
+            .then(() => window.location.href = 'index.html');
+    }
+</script>
+</body>
+</html>
