@@ -1,4 +1,4 @@
-package Features;
+package org.example.Features;
 
 import org.example.Features.BuscarInvitado;
 import org.junit.jupiter.api.Test;
