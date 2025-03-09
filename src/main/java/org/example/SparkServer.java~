@@ -43,7 +43,7 @@ public class SparkServer {
         delete("/api/guests/:id", (req, res) -> {
             res.type("application/json");
             int id = Integer.parseInt(req.params("id"));
-            EliminarInvitado.delete(id);
+            GuestService.deleteGuest(id);
             return "{\"status\":\"ok\"}";
         });
 
