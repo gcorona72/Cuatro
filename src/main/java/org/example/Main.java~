@@ -1,0 +1,35 @@
+package org.example;
+
+import org.example.Database.SupabaseConnection;
+import java.awt.Desktop;
+import java.net.URI;
+import java.sql.Connection;
+
+public class Main {
+    public static void main(String[] args) {
+
+        SparkServer.start();
+
+        try {
+            Thread.sleep(2000);  // Espera 2 segundos antes de continuar
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+
+        Connection conn = SupabaseConnection.getConnection();
+        if (conn != null) {
+            System.out.println("✅ Conexión exitosa a Supabase!");
+        } else {
+            System.out.println("❌ Error al conectar con la base de datos.");
+        }
+
+        try {
+            if (Desktop.isDesktopSupported()) {
+                Desktop.getDesktop().browse(new URI("http://localhost:4567"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}

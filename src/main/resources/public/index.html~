@@ -184,8 +184,7 @@
     fetch('/api/guests', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ nombre: document.getElementById("nombre").value,
-        acompanante: document.getElementById("acompanante").checked })
+      body: JSON.stringify({ nombre: nombre, acompanante: acompanante })
     })
             .then(resp => resp.json())
             .then(result => {
