@@ -1,6 +1,7 @@
 # Gestión de Invitados
 
 Este es un proyecto simple de gestión de invitados desarrollado en Java. El programa permite realizar operaciones básicas de CRUD (Crear, Leer, Actualizar, Eliminar) sobre una base de datos MySQL. Además, se incluyen pruebas unitarias para garantizar el correcto funcionamiento de las funcionalidades.
+LA aplicación se ejecuta en el puerto 4
 
 ## Requisitos
 
